@@ -26,7 +26,7 @@ class BaseAPI(object):
         :arg secret_key Secret key string
         :arg request_type request type allowed json, xml, form
         :arg api_domain api domain
-        :arg api_protocol allowed protocols 1.0, 2.0
+        :arg api_protocol allowed protocols 1.0.1, 2.0
         """
 
         self.merchant_id = kwargs.get("merchant_id", "")
@@ -38,8 +38,10 @@ class BaseAPI(object):
         self.api_domain = domain = kwargs.get("api_domain", "api.fondy.eu")
         self.api_url = __api_url__.format(api_domain=domain)
         self.api_protocol = kwargs.get("api_protocol", __protocol__)
-        if self.api_protocol not in ("1.0", "2.0"):
-            raise ValueError("Incorrect protocol version")
+        if self.api_protocol not in ("1.0.1", "2.0"):
+            raise ValueError(
+                "Incorrect protocol version, only 1.0.1 and 2.0 are available. See more info here https://docs.fondy.eu/ru/docs/page/3/"
+            )
         if self.api_protocol == "2.0" and self.request_type != "json":
             raise ValueError("In protocol '2.0' only json allowed")
 

@@ -7,7 +7,7 @@ async def main():
         merchant_id=1396424,
         secret_key="test",
         request_type="json",
-        api_protocol="1.0",
+        api_protocol="1.0.1",
         api_domain="api.fondy.eu",
     )  # json - is default
     checkout = Checkout(api=api)

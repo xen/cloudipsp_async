@@ -28,7 +28,7 @@ class BaseTestCase(TestCase):
     def test_validate_order(self):
         payment = self.create_order()
         is_valid = helpers.is_valid(
-            data=payment, secret_key=self.data["merchant"]["secret"], protocol="1.0"
+            data=payment, secret_key=self.data["merchant"]["secret"], protocol="1.0.1"
         )
         self.assertEqual(payment.get("response_status"), "success")
         self.assertEqual(is_valid, True)

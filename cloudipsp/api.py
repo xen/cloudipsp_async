@@ -40,7 +40,8 @@ class BaseAPI(object):
         self.api_protocol = kwargs.get("api_protocol", __protocol__)
         if self.api_protocol not in ("1.0.1", "2.0"):
             raise ValueError(
-                "Incorrect protocol version, only 1.0.1 and 2.0 are available. See more info here https://docs.fondy.eu/ru/docs/page/3/"
+                "Incorrect protocol version, only 1.0.1 and 2.0 are "
+                "available. See more info here https://docs.fondy.eu/ru/docs/page/3/"
             )
         if self.api_protocol == "2.0" and self.request_type != "json":
             raise ValueError("In protocol '2.0' only json allowed")

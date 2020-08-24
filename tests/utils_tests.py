@@ -1,29 +1,32 @@
 from __future__ import absolute_import, unicode_literals
 from cloudipsp import utils
-from .tests_helper import TestCase
+from .tests_helper import BaseTestCase
 
 
-class UtilTest(TestCase):
+class UtilTest(BaseTestCase):
     def setUp(self):
         self.data = self.get_dummy_data()
 
     def test_to_xml(self):
-        xml = utils.to_xml(self.data['checkout_data'])
-        self.assertEqual(xml, '<?xml version="1.0" encoding="UTF-8"?><amount>100</amount><currency>USD</currency>')
+        xml = utils.to_xml(self.data["checkout_data"])
+        self.assertEqual(
+            xml,
+            '<?xml version="1.0" encoding="UTF-8"?><amount>100</amount><currency>USD</currency>',
+        )
 
     def test_from_xml(self):
-        xml = utils.to_xml({'req': self.data['checkout_data']})
+        xml = utils.to_xml({"req": self.data["checkout_data"]})
         json = utils.from_xml(xml)
-        self.assertEqual(json, {'req': self.data['checkout_data']})
+        self.assertEqual(json, {"req": self.data["checkout_data"]})
 
     def test_to_form(self):
-        form = utils.to_form(self.data['checkout_data'])
-        self.assertEqual(form, 'amount=100&currency=USD')
+        form = utils.to_form(self.data["checkout_data"])
+        self.assertEqual(form, "amount=100&currency=USD")
 
     def test_from_from(self):
-        form = utils.to_form(self.data['checkout_data'])
+        form = utils.to_form(self.data["checkout_data"])
         json = utils.from_form(form)
-        self.assertEqual(json, self.data['checkout_data'])
+        self.assertEqual(json, self.data["checkout_data"])
 
     def test_join_url(self):
         joined_url = utils.join_url("checkout", "order")

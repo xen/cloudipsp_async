@@ -18,7 +18,7 @@ except ImportError:
 
 class Resource(object):
     def __init__(self, api=None, headers=None):
-        self.__dict__["api"] = api
+        self.api = api
         self.is_async = api.is_async
 
         self.data = {}
@@ -33,16 +33,18 @@ class Resource(object):
 
     async def _async_call(self, api_method, params):
         path, data = api_method(params)
+        signed_data, headers = self.api.get_signed_data(data, self.headers)
+
         log.debug("Request Type: %s", self.api.request_type)
         log.debug("URL: %s", path)
-        log.debug("Data: %s", str(data))
-        log.debug("Headers: %s", str(self.headers))
+        log.debug("Data: %s", str(signed_data))
+        log.debug("Headers: %s", str(headers))
 
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 f"https://{self.api.api_domain}/api{path}",
-                data=data,
-                headers=self.headers,
+                data=signed_data,
+                headers=headers,
             ) as r:
                 resp = await r.text()
                 log.debug("Status: %s", r.status)
@@ -51,7 +53,7 @@ class Resource(object):
                 print(resp)
 
                 if r.status in (200, 201):
-                    return self.response(data)
+                    return self.response(resp)
 
             raise exceptions.ServiceError(f"Response code is: {resp.status}")
 
@@ -64,16 +66,18 @@ class Resource(object):
         :return: api response
         """
         path, data = api_method(params)
-        log.debug("Request Type: %s", self.request_type)
+        signed_data, headers = self.api.get_signed_data(data, self.headers)
+
+        log.debug("Request Type: %s", self.api.request_type)
         log.debug("URL: %s", path)
-        log.debug("Data: %s", str(data))
-        log.debug("Headers: %s", str(self.headers))
+        log.debug("Data: %s", str(signed_data))
+        log.debug("Headers: %s", str(headers))
 
         resp = requests.request(
             "post",
             f"https://{self.api.api_domain}/api{path}",
-            data=data,
-            headers=self.headers,
+            data=signed_data,
+            headers=headers,
         )
         log.debug("Responce: %s", str(resp.content.decode("utf-8")))
 

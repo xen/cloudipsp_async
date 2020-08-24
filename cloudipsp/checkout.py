@@ -89,8 +89,8 @@ class Checkout(Resource):
         :param data:
         :return: parameters to send
         """
-        self.order_id = data.get("order_id") or helper.generate_order_id()
-        order_desc = data.get("order_desc") or helper.get_desc(self.order_id)
+        self.order_id = data.get("order_id", helper.generate_order_id())
+        order_desc = data.get("order_desc", f"Pay for order #: {self.order_id}")
         params = {
             "order_id": self.order_id,
             "order_desc": order_desc,

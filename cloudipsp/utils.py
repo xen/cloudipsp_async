@@ -4,7 +4,7 @@ from collections import OrderedDict
 import re
 import json
 import base64
-import six.moves.urllib as urllib
+import urllib
 import xml.etree.cElementTree as ElementTree
 
 
@@ -12,14 +12,14 @@ def to_b64(data):
     """
     Encoding data string base64 algorithm
     """
-    return base64.b64encode(json.dumps(data).encode('utf-8')).decode('utf-8')
+    return base64.b64encode(json.dumps(data).encode("utf-8")).decode("utf-8")
 
 
 def from_b64(data):
     """
     Encoding data string base64 algorithm
     """
-    return base64.b64decode(json.dumps(data).encode('utf-8')).decode('utf-8')
+    return base64.b64decode(json.dumps(data).encode("utf-8")).decode("utf-8")
 
 
 def to_xml(data, start='<?xml version="1.0" encoding="UTF-8"?>'):
@@ -69,7 +69,7 @@ def join_url(url, *paths):
     :return: full url
     """
     for path in paths:
-        url = re.sub(r'/?$', re.sub(r'^/?', '/', path), url)
+        url = re.sub(r"/?$", re.sub(r"^/?", "/", path), url)
     return url
 
 
@@ -105,7 +105,7 @@ def _data2xml(d):
         for sub_elem in d:
             result_list.append(_data2xml(sub_elem))
 
-        return ''.join(d)
+        return "".join(d)
 
     if isinstance(d, dict):
         for tag_name, sub_obj in d.items():
@@ -113,7 +113,7 @@ def _data2xml(d):
             result_list.append(_data2xml(sub_obj))
             result_list.append("</%s>" % tag_name)
 
-        return ''.join(result_list)
+        return "".join(result_list)
 
     return "%s" % d
 
@@ -123,7 +123,7 @@ def _parse(node):
     for c in node.getchildren():
         c_tag = c.tag
         c_attr = c.attrib
-        ctext = c.text.strip() if c.text is not None else ''
+        ctext = c.text.strip() if c.text is not None else ""
         c_tree = _parse(c)
 
         if not c_tree:
@@ -133,18 +133,18 @@ def _parse(node):
         if c_tag not in tree:
             tree.update(c_dict)
             continue
-        atag = '@' + c_tag
+        atag = "@" + c_tag
         atree = tree[c_tag]
         if not isinstance(atree, list):
             if not isinstance(atree, dict):
                 atree = {}
             if atag in tree:
-                atree['#' + c_tag] = tree[atag]
+                atree["#" + c_tag] = tree[atag]
                 del tree[atag]
             tree[c_tag] = [atree]
 
         if c_attr:
-            c_tree['#' + c_tag] = c_attr
+            c_tree["#" + c_tag] = c_attr
 
         tree[c_tag].append(c_tree)
     return tree
@@ -153,7 +153,7 @@ def _parse(node):
 def _xml_to_dict(tag, value, attr=None):
     ret = {tag: value}
     if attr:
-        atag = '@' + tag
+        atag = "@" + tag
         aattr = {}
         for k, v in attr.items():
             aattr[k] = v

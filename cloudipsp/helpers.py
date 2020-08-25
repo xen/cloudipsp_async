@@ -57,12 +57,12 @@ def get_signature(secret_key, params, protocol):
         return sha1(sep.join(data).encode("utf-8")).hexdigest()
 
 
-# def get_desc(order_id):
-#     """
-#     :param order_id: order id
-#     :return: description string
-#     """
-#     return 'Pay for order #: %s' % order_id
+def get_desc(order_id):
+    """
+    :param order_id: order id
+    :return: description string
+    """
+    return "Pay for order #: %s" % order_id
 
 
 def generate_order_id():
